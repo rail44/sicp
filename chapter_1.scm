@@ -75,3 +75,34 @@
     (if (= n 1) 1 0)
     (+ (pascal (- l 1) (- n 1)) (pascal (- l 1) n))))
 
+(define (fast-expt b n)
+  (define (even? n)
+    (= (remainder n 2) 0))
+  (cond ((= n 0) 1)
+	((even? n) (square (fast-expt b (/ n 2))))
+	(else (* b (fast-expt b (- n 1))))))
+
+(define (fast-expt-iter b n)
+  (define (even? n)
+    (= (remainder n 2) 0))
+
+  (define (iter b n a)
+    (cond ((= n 0) a)
+          ((even? n) (iter (square b) (/ n 2) a))
+          (else (iter b (- n 1) (* a b)))))
+
+  (iter b n 1))
+
+(define (ex-1-17 a b)
+  (define (double n) (* 2 n))
+  (define (halve n) (/ n 2))
+  (define (even? n)
+    (= (remainder n 2) 0))
+
+  (define (proc a b)
+    (if (= b 0)
+      0
+      (if (even? b)
+	(double (* a (halve b)))
+	(+ a (* a (- b 1))))))
+  (proc a b))
