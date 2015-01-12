@@ -106,3 +106,16 @@
 	(double (* a (halve b)))
 	(+ a (* a (- b 1))))))
   (proc a b))
+
+(define (ex-1-18 a b)
+  (define (double n) (* 2 n))
+  (define (halve n) (/ n 2))
+  (define (even? n)
+    (= (remainder n 2) 0))
+
+  (define (iter a b c)
+    (cond ((= b 0) c)
+          ((even? b) (iter (double a) (halve b) c))
+          (else (iter a (- b 1) (+ a c)))))
+
+  (iter a b 0))
