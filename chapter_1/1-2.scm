@@ -88,3 +88,124 @@
                           q
                           (- count 1)))))
   (fib n))
+
+(define (smallest-divisor n)
+  (find-divisor n 2))
+
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) n)
+        ((divides? test-divisor n) test-divisor)
+        (else (find-divisor n (+ test-divisor 1)))))
+
+(define (divides? a b)
+  (= (remainder b a) 0))
+
+(define (prime? n)
+  (= n (smallest-divisor n)))
+
+(define (ex-1-22 a b)
+  (define (timed-prime-test n)
+    (newline)
+    (display n)
+    (start-prime-test n (current-milliseconds)))
+
+  (define (start-prime-test n start-time)
+    (if (prime? n)
+      (report-prime (- (current-milliseconds) start-time))))
+
+  (define (report-prime elapsed-time)
+    (display " *** ")
+    (display elapsed-time))
+
+  (define (serch-for-primes a b)
+    (timed-prime-test a)
+    (if (< a b)
+      (serch-for-primes (+ a 1) b)))
+
+  (serch-for-primes a b))
+
+(define (ex-1-24 n)
+  (define (smallest-divisor n)
+    (find-divisor n 2))
+
+  (define (find-divisor n test-divisor)
+    (cond ((> (square test-divisor) n) n)
+          ((divides? test-divisor n) test-divisor)
+          (else (find-divisor n (next test-divisor)))))
+  
+  (define (prime? n)
+    (= n (smallest-divisor n)))
+
+  (define (next n)
+    (if (= n 2)
+      3
+      (+ n 1)))
+
+  (define (start n)
+    (end n (current-milliseconds)))
+
+  (define (end n before)
+    (prime? n)
+    (display (- (current-milliseconds) before)))
+
+  (start n))
+(define (expmod base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (remainder (square (expmod base (/ exp 2) m))
+                    m))
+        (else
+          (remainder (* base (expmod base (- exp 1) m))
+                     m))))
+
+(define (fermat-test n)
+  (define (try-it a)
+    (= (expmod a n n) a))
+  (try-it (+ 1 (random (- n 1)))))
+
+(define (fast-prime? n times)
+  (cond ((= times 0) #t)
+        ((fermat-test n) (fast-prime? n (- times 1)))
+        (else #f)))
+
+(define (ex-1-24 n)
+  (define (timed-prime-test n)
+    (display n)
+    (start-prime-test n (current-milliseconds))
+    (newline))
+
+  (define (start-prime-test n start-time)
+    (if (fast-prime? n 1)
+      (report-prime (- (current-milliseconds) start-time))))
+
+  (define (report-prime elapsed-time)
+    (display " *** ")
+    (display elapsed-time))
+
+  (timed-prime-test n))
+
+(define (ex-1-25 base exp m)
+  (remainder (fast-expt base exp) m))
+
+(define (ex-1-27 n)
+  (define (iter n a)
+    (cond
+      ((>= a n) #t)
+      ((= (expmod a n n) a) (iter n (+ a 1)))
+      (else #f)))
+  (iter n 1))
+
+(define (ex-1-28 n)
+  (define (expmod base exp m)
+    (cond ((= exp 0) 1)
+          ((= (remainder base m) 1) 0)
+          ((even? exp)
+            (remainder (square (expmod base (/ exp 2) m))
+                        m))
+          (else
+            (remainder (* base (expmod base (- exp 1) m))
+                       m))))
+  (define (try-it a)
+    (= (expmod a n n) a))
+
+  (try-it (+ (random (- n 1)) 1)))
