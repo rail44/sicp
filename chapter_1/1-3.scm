@@ -40,3 +40,10 @@
         2)
       (f (arg n))))
   (* (/ h 3) (+ (f (arg 0)) (sum term 1 inc (- n 1)) (f (arg n)))))
+
+(define (ex-1-30 term a next b)
+  (define (iter a result)
+    (if (> a b)
+      result
+      (iter (next a) (+ (term a) result))))
+  (iter a 0))
