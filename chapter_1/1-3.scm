@@ -47,3 +47,40 @@
       result
       (iter (next a) (+ (term a) result))))
   (iter a 0))
+
+(define (product term a next b)
+  (define (iter a result)
+    (if (> a b)
+      result
+      (iter (next a) (* (term a) result))))
+  (iter a 1))
+
+(define (factorical x)
+  (define (term x) x)
+  (define (next x) (+ x 1))
+  (product term 2 next x))
+
+(define (ex-1-31-pi n)
+  (define (next n) (+ n 1))
+  (define (mother n)
+    (if (= (remainder n 2) 0)
+      n
+      (+ n 1)))
+  (define (child n)
+    (+ 1 (mother n)))
+  (define (term n)
+    (/ (mother (+ n 1)) (child n)))
+  (* (product term 1 next n) 4))
+
+(define (ex-1-31-b term a next b)
+  (if (> a b)
+    1
+    (* (term a) (ex-1-31-b term (next a) next b))))
+
+(assert (=
+  ((lambda (x)
+      (define (term x) x)
+      (define (next x) (+ x 1))
+      (ex-1-31-b term 2 next x))
+    6)
+  720))
