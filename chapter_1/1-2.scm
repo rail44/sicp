@@ -101,7 +101,9 @@
   (= (remainder b a) 0))
 
 (define (prime? n)
-  (= n (smallest-divisor n)))
+  (if (> n 1)
+    (= n (smallest-divisor n))
+    #f))
 
 (define (ex-1-22 a b)
   (define (timed-prime-test n)

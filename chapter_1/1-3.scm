@@ -1,3 +1,5 @@
+(load "1-2")
+
 (define (cube x) (* x x x))
 
 (define (sum-intergers a b)
@@ -120,3 +122,31 @@
 (assert (=
           (ex-1-32-sum cube 1 inc 10)
           (ex-1-32-b-sum cube 1 inc 10)))
+
+(define (filter-accumulate filter-cond combiner null-value term a next b)
+  (define (iter a result)
+    (cond
+      ((> a b) result)
+      ((filter-cond a) (iter (next a) (combiner (term a) result)))
+      ((iter (next a) result))))
+  (iter a null-value))
+
+(define (ex-1-33-a a b)
+  (define (filter-cond a)
+    (prime? a))
+  (define (combiner a b) (+ a b))
+  (define (term a) (* a a))
+  (define (next a) (+ a 1))
+  (filter-accumulate filter-cond combiner 0 term a next b))
+
+(assert (=
+          (ex-1-33-a 1 11)
+          208))
+
+(define (ex-1-33-b n)
+  (define (filter-cond i)
+    (= (gcd i n) 1))
+  (define (combiner a b) (* a b))
+  (define (term a) a)
+  (define (next a) (+ a 1))
+  (filter-accumulate filter-cond  combiner 1 term 1 next n))
