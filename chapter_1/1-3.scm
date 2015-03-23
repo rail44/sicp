@@ -84,3 +84,39 @@
       (ex-1-31-b term 2 next x))
     6)
   720))
+
+(define (accumulate combiner null-value term a next b)
+  (define (iter a result)
+    (if (> a b)
+      result
+      (iter (next a) (combiner (term a) result))))
+  (iter a null-value))
+
+(define (ex-1-32-sum term a next b)
+  (define (combiner a b) (+ a b))
+  (accumulate combiner 0 term a next b))
+
+(assert (=
+          (sum cube 1 inc 10)
+          (ex-1-32-sum cube 1 inc 10)))
+
+(define (ex-1-32-product term a next b)
+  (define (combiner a b) (* a b))
+  (accumulate combiner 1 term a next b))
+
+(assert (=
+          (product cube 1 inc 5)
+          (ex-1-32-product cube 1 inc 5)))
+
+(define (ex-1-32-b combiner null-value term a next b)
+  (if (> a b)
+    null-value
+    (combiner (term a) (ex-1-32-b combiner null-value term (next a) next b))))
+
+(define (ex-1-32-b-sum term a next b)
+  (define (combiner a b) (+ a b))
+  (ex-1-32-b combiner 0 term a next b))
+
+(assert (=
+          (ex-1-32-sum cube 1 inc 10)
+          (ex-1-32-b-sum cube 1 inc 10)))
