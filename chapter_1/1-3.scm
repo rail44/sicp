@@ -150,3 +150,19 @@
   (define (term a) a)
   (define (next a) (+ a 1))
   (filter-accumulate filter-cond  combiner 1 term 1 next n))
+
+(define tolerance 0.00001)
+
+(define (fixed-point f first-guess)
+  (define (close-enough? v1 v2)
+    (< (abs (- v1 v2)) tolerance))
+  (define (try guess)
+    (let ((next (f guess)))
+      (if (close-enough? guess next)
+        next
+        (try next))))
+  (try first-guess))
+
+(define (ex-1-35)
+  (define (func x) (+ 1 (/ 1 x)))
+  (fixed-point func 1))
