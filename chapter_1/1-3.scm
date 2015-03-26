@@ -229,3 +229,31 @@
   (define (d i)
     (- (* i 2) 1))
   (cont-frac-iter n d k))
+
+(define dx 0.00001)
+
+(define (deriv g)
+  (lambda (x)
+    (/ (- (g (+ x dx)) (g x))
+       dx)))
+
+(define (newton-transfarm g)
+  (lambda (x)
+    (- x (/ (g x) ((deriv g) x)))))
+
+(define (newtons-method g guess)
+  (fixed-point (newton-transfarm g) guess))
+
+(define (sqrt-with-newtons-method x)
+  (newtons-method (lambda (y) (- (square y) x))
+                  1.0))
+
+(define (ex-1-36-with-newtons-method)
+  (newtons-method (lambda (x) (- (expt x x) 1000))
+                  1.0))
+
+(define (fixed-point-of-ransform g transform guess)
+  (fixed-point (transform g) guess))
+
+(define (cubic a b c)
+  (lambda (x) (+ (* x x x) (* a x x) (* b x) c)))
