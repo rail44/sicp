@@ -263,3 +263,10 @@
 
 (define (own-compose f g)
   (lambda (x) (f (g x))))
+
+(define (repeated f n)
+  (define (iter i result)
+    (if (= i 0)
+      result
+      (iter (- i 1) (own-compose f result))))
+  (iter n (lambda (x) x)))
