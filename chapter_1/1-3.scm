@@ -220,3 +220,12 @@
                     d
                     k)
     2))
+
+(define (ex-1-39 x k)
+  (define (n i)
+    (if (= i 1)
+      x
+      (* -1 x x)))
+  (define (d i)
+    (- (* i 2) 1))
+  (cont-frac-iter n d k))
