@@ -208,3 +208,15 @@
     (=
       (cont-frac-recur nd nd 100)
       (cont-frac-iter nd nd 100))))
+
+(define (ex-1-38 k)
+  (define (d i)
+    (let ((i-plus-one (+ i 1)))
+      (if (= (remainder i-plus-one 3) 0)
+        (* (/ i-plus-one 3) 2)
+        1)))
+  (+
+    (cont-frac-iter (lambda (i) 1.0)
+                    d
+                    k)
+    2))
