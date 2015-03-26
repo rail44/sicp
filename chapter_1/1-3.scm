@@ -166,3 +166,45 @@
 (define (ex-1-35)
   (define (func x) (+ 1 (/ 1 x)))
   (fixed-point func 1))
+
+(define (fixed-point-with-display f first-guess)
+  (define (close-enough? v1 v2)
+    (< (abs (- v1 v2)) tolerance))
+  (define (try guess)
+    (display guess)
+    (newline)
+    (let ((next (f guess)))
+      (if (close-enough? guess next)
+        next
+        (try next))))
+  (try first-guess))
+
+(define (ex-1-36)
+  (define (func x)
+    (/ (log 1000) (log x)))
+  (fixed-point-with-display func 2))
+
+(define (ex-1-36-with-average)
+  (define (func x)
+    (/ (+ (/ (log 1000) (log x)) x) 2))
+  (fixed-point-with-display func 2))
+
+(define (cont-frac-recur n d k)
+  (define (func i)
+    (if (> i k)
+      0
+      (/ (n i) (+ (d i) (func (+ i 1))))))
+  (func 1))
+
+(define (cont-frac-iter n d k)
+  (define (iter i result)
+    (if (= i 0)
+      result
+      (iter (- i 1) (/ (n i) (+ (d i) result)))))
+  (iter k 0))
+
+(assert 
+  (let ((nd (lambda (i) 1.0)))
+    (=
+      (cont-frac-recur nd nd 100)
+      (cont-frac-iter nd nd 100))))
