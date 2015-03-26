@@ -260,3 +260,6 @@
 
 (define (double f)
   (lambda (x) (f (f x))))
+
+(define (own-compose f g)
+  (lambda (x) (f (g x))))
