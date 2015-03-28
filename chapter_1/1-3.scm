@@ -79,13 +79,14 @@
     1
     (* (term a) (ex-1-31-b term (next a) next b))))
 
-(assert (=
-  ((lambda (x)
-      (define (term x) x)
-      (define (next x) (+ x 1))
-      (ex-1-31-b term 2 next x))
-    6)
-  720))
+(define (test-ex-1-31-b)
+  (assert (=
+            ((lambda (x)
+               (define (term x) x)
+               (define (next x) (+ x 1))
+               (ex-1-31-b term 2 next x))
+             6)
+            720)))
 
 (define (accumulate combiner null-value term a next b)
   (define (iter a result)
@@ -98,17 +99,19 @@
   (define (combiner a b) (+ a b))
   (accumulate combiner 0 term a next b))
 
-(assert (=
-          (sum cube 1 inc 10)
-          (ex-1-32-sum cube 1 inc 10)))
+(define (test-ex-1-32-sum)
+  (assert (=
+            (sum cube 1 inc 10)
+            (ex-1-32-sum cube 1 inc 10))))
 
 (define (ex-1-32-product term a next b)
   (define (combiner a b) (* a b))
   (accumulate combiner 1 term a next b))
 
-(assert (=
+(define (test-ex-1-32-product)
+  (assert (=
           (product cube 1 inc 5)
-          (ex-1-32-product cube 1 inc 5)))
+          (ex-1-32-product cube 1 inc 5))))
 
 (define (ex-1-32-b combiner null-value term a next b)
   (if (> a b)
@@ -119,9 +122,10 @@
   (define (combiner a b) (+ a b))
   (ex-1-32-b combiner 0 term a next b))
 
-(assert (=
-          (ex-1-32-sum cube 1 inc 10)
-          (ex-1-32-b-sum cube 1 inc 10)))
+(define (test-ex-1-32-b-sum)
+          (assert (=
+                    (ex-1-32-sum cube 1 inc 10)
+                    (ex-1-32-b-sum cube 1 inc 10))))
 
 (define (filter-accumulate filter-cond combiner null-value term a next b)
   (define (iter a result)
@@ -139,9 +143,10 @@
   (define (next a) (+ a 1))
   (filter-accumulate filter-cond combiner 0 term a next b))
 
-(assert (=
-          (ex-1-33-a 1 11)
-          208))
+(define (test-ex-1-33-a)
+  (assert (=
+            (ex-1-33-a 1 11)
+            208)))
 
 (define (ex-1-33-b n)
   (define (filter-cond i)
@@ -203,11 +208,12 @@
       (iter (- i 1) (/ (n i) (+ (d i) result)))))
   (iter k 0))
 
-(assert 
-  (let ((nd (lambda (i) 1.0)))
-    (=
-      (cont-frac-recur nd nd 100)
-      (cont-frac-iter nd nd 100))))
+(define (test-cont-frac)
+  (assert 
+    (let ((nd (lambda (i) 1.0)))
+      (=
+        (cont-frac-recur nd nd 100)
+        (cont-frac-iter nd nd 100)))))
 
 (define (ex-1-38 k)
   (define (d i)
@@ -270,3 +276,51 @@
       result
       (iter (- i 1) (own-compose f result))))
   (iter n (lambda (x) x)))
+
+(define (smooth f)
+  (define dx 0.00001)
+  (lambda (x) (/ (+ (f (- x dx)) (f x) (f (+ x dx))))))
+
+(define (ex-1-44 f n)
+  ((repeated smooth n) f))
+
+(define (average-damp f)
+  (lambda (x) (average x (f x))))
+
+(define (ex-1-45 x n)
+  (let ((average-times (floor (/ (log n) (log 2)))))
+    (fixed-point ((repeated average-damp average-times) (lambda (y) (/ x (expt y (- n 1)))))
+                 1.0)))
+
+(define (interactive-improve enough? next)
+  (lambda (x)
+    (define (iter guess)
+      (if (enough? guess)
+        guess
+        (iter (next guess))))
+    (iter x)))
+
+(define (ex-1-46-sqrt x)
+  (define (improve guess)
+    (average guess (/ x guess)))
+  (define (good-enough? guess)
+    (< (abs (- (improve guess) guess)) (abs (* x 0.00000001))))
+  ((interactive-improve good-enough?
+                        improve) x))
+
+(define (test-ex-1-46-sqrt)
+  (assert (=
+            (ex-1-46-sqrt 9)
+            (my-sqrt 9))))
+
+(define (ex-1-46-fixed-point f first-guess)
+  (define (next guess) (f guess))
+  (define (enough? guess)
+    (< (abs (- guess (next guess))) tolerance))
+  (next ((interactive-improve enough?
+                        next) first-guess)))
+
+(define (test-ex-1-46-fixed-point)
+  (assert (=
+            (fixed-point cos 1.0)
+            (ex-1-46-fixed-point cos 1.0))))
