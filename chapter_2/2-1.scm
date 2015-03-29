@@ -160,3 +160,17 @@
       (=
         (ex-2-5-cdr pair)
         13))))
+
+(define zero (lambda (f) (lambda (x) x)))
+
+(define (add-1 n)
+  (lambda (f) (lambda (x) (f ((n f) x)))))
+
+(define one
+  (lambda (f) (lambda (x) (f x))))
+
+(define two
+  (lambda (f) (lambda (x) (f (f x)))))
+
+(define (ex-2-6-plus a b)
+  (lambda (f) (lambda (x) ((n b) ((n a) x)))))
