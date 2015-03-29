@@ -124,3 +124,14 @@
       (assert
         (= (perimeter-rectangle r)
            34)))))
+
+(define (ex-2-4-cdr z)
+  (z (lambda (p q) q)))
+
+(define (test-ex-2-4)
+  (define (cons x y)
+    (lambda (m) (m x y)))
+  (assert
+    (=
+      (ex-2-4-cdr (cons 3 4))
+      4)))
