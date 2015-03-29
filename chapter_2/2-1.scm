@@ -135,3 +135,28 @@
     (=
       (ex-2-4-cdr (cons 3 4))
       4)))
+
+(define (ex-2-5-cons x y)
+  (* (expt 2 x) (expt 3 y)))
+
+(define (ex-2-5-iter z n i)
+  (if (= (remainder z n) 0)
+    (ex-2-5-iter (/ z n) n (+ i 1))
+    i))
+
+(define (ex-2-5-car z)
+  (ex-2-5-iter z 2 0))
+
+(define (ex-2-5-cdr z)
+  (ex-2-5-iter z 3 0))
+
+(define (test-ex-2-5)
+  (let ((pair (ex-2-5-cons 11 13)))
+    (assert
+      (=
+        (ex-2-5-car pair)
+        11))
+    (assert
+      (=
+        (ex-2-5-cdr pair)
+        13))))
