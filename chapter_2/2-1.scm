@@ -173,7 +173,13 @@
   (lambda (f) (lambda (x) (f (f x)))))
 
 (define (ex-2-6-plus a b)
-  (lambda (f) (lambda (x) ((n b) ((n a) x)))))
+  (lambda (f) (lambda (x) ((b f) ((a f) x)))))
+
+(define (test-ex-2-6)
+  (assert
+    (= (((ex-2-6-plus one two) (lambda (x) (+ x 1))) 0)
+       3)))
+
 
 (define (add-interval x y)
   (make-interval (+ (lower-bound x) (lower-bound y))
