@@ -206,3 +206,32 @@
 (define (sub-interval x y)
   (make-interval (- (lower-bound x) (upper-bound y))
                  (- (upper-bound x) (lower-bound y))))
+
+(define (width-interval i)
+  (/ (abs (- (upper-bound i) (lower-bound i))) 2))
+
+(define (print-interval i)
+  (display (lower-bound i))
+  (display ":")
+  (display (upper-bound i))
+  (newline))
+
+(define (make-random-interval maximum)
+  (let ((upper (random  maximum)))
+    (make-interval (- upper (random maximum)) upper)))
+
+(define (test-ex-2-9)
+  (let ((a (make-random-interval 20))
+        (b (make-random-interval 20)))
+    (define sub (sub-interval a b))
+    (define add (add-interval a b))
+    (display "a: ")
+    (print-interval a)
+    (display "b: ")
+    (print-interval b)
+    (assert
+      (= (width-interval sub)
+         (abs (+ (width-interval a) (width-interval b)))))
+    (assert
+      (= (width-interval add)
+         (abs (+ (width-interval a) (width-interval b)))))))
