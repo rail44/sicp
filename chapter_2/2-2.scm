@@ -105,3 +105,13 @@
         ((not (pair? x)) 1)
         (else  (+ (count-leaves (car x))
                   (count-leaves (cdr x))))))
+
+(define ex-2-24-1
+ (car (cdr (car (cdr (cdr (list 1 3 (list 5 7) 9)))))))
+
+(define ex-2-24-2
+  (car (car (list (list 7)))))
+
+(define ex-2-24-3
+  (car (cdr (car (cdr (car (cdr (car (cdr (car (cdr (car (cdr
+    (list 1 (list 2 (list 3 (list 4 (list 5 (list 6 7)))))))))))))))))))
