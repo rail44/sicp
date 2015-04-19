@@ -134,22 +134,22 @@
   (reverse (iter l '())))
 
 (define (make-mobile left right)
-  (list left right))
+  (cons left right))
 
 (define (make-branch length structure)
-  (list length structure))
+  (cons length structure))
 
 (define (left-branch m)
   (car m))
 
 (define (right-branch m)
-  (car (cdr m)))
+  (cdr m))
 
 (define (branch-length b)
   (car b))
 
 (define (branch-structure b)
-  (car (cdr b)))
+  (cdr b))
 
 (define (total-weight m)
   (define (iter x result)
