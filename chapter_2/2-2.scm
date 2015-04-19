@@ -132,3 +132,63 @@
       ((pair? l) (iter (cdr l) (iter (car l) result)))
       (else (cons l result))))
   (reverse (iter l '())))
+
+(define (make-mobile left right)
+  (list left right))
+
+(define (make-branch length structure)
+  (list length structure))
+
+(define (left-branch m)
+  (car m))
+
+(define (right-branch m)
+  (car (cdr m)))
+
+(define (branch-length b)
+  (car b))
+
+(define (branch-structure b)
+  (car (cdr b)))
+
+(define (total-weight m)
+  (define (iter x result)
+    (if (pair? x)
+      (iter (branch-structure (right-branch x))
+            (iter (branch-structure (left-branch x)) result))
+      (+ result x)))
+  (iter m 0))
+
+(define hoge-mobile
+  (make-mobile
+    (make-branch 2
+                 (make-mobile
+                   (make-branch 3 4)
+                   (make-branch 5 3)))
+    (make-branch 8 3)))
+
+(define balanced-mobile
+  (make-mobile
+    (make-branch 4
+                 (make-mobile
+                   (make-branch 3 4)
+                   (make-branch 6 2)))
+    (make-branch 8 3)))
+
+(define (mobile-balanced? m)
+  (define (iter x)
+    (if (pair? x)
+      (let ((left (left-branch x))
+            (right (right-branch x)))
+        (let ((left-results (iter (branch-structure left)))
+              (right-results (iter (branch-structure right))))
+          (let ((left-weight (cdr left-results))
+                (right-weight (cdr right-results)))
+            (if (and (car left-results)
+                     (car right-results)
+                     (= (* (branch-length left) left-weight)
+                        (* (branch-length right) right-weight)))
+              (cons #t (+ left-weight right-weight))
+              (cons #f 0)))))
+      (cons #t x)))
+  (car (iter m)))
