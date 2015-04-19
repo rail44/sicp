@@ -259,5 +259,10 @@
 (define (make-interval-center-percent c p)
   (make-interval-center-width (c (/ (* c p) 100))))
 
-(define (interval-percent i)
+(define (percent-interval i)
   (* (/ (width-interval i) (center-interval i)) 100))
+
+(define (ex-2-13 x y)
+  (let ((center (* (center-interval x) (center-interval y)))
+        (percent (+ (percent-interval x) (percent-interval y))))
+    (make-interval-center-percent center percent)))
