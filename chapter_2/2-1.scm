@@ -222,7 +222,7 @@
                  (- (upper-bound x) (lower-bound y))))
 
 (define (width-interval i)
-  (/ (abs (- (upper-bound i) (lower-bound i))) 2))
+  (/ (- (upper-bound i) (lower-bound i)) 2))
 
 (define (print-interval i)
   (display (lower-bound i))
@@ -245,7 +245,7 @@
     (print-interval b)
     (assert
       (= (width-interval sub)
-         (abs (+ (width-interval a) (width-interval b)))))
+         (+ (width-interval a) (width-interval b))))
     (assert
       (= (width-interval add)
-         (abs (+ (width-interval a) (width-interval b)))))))
+         (+ (width-interval a) (width-interval b))))))
