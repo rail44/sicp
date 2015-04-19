@@ -34,3 +34,10 @@
     (equal?
       (append odds odds)
       (my-append odds odds))))
+
+(define (last-pair l)
+  (if (null? l) (error))
+  (let ((cdr-l (cdr l)))
+    (if (null? cdr-l)
+      (car l)
+      (last-pair cdr-l))))
