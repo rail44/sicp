@@ -249,3 +249,15 @@
     (assert
       (= (width-interval add)
          (+ (width-interval a) (width-interval b))))))
+
+(define (make-interval-center-width c w)
+  (make-interval (- c w) (+ c w)))
+
+(define (center-interval i)
+  (/ (+ (lower-bound i) (upper-bound i)) 2))
+
+(define (make-interval-center-percent c p)
+  (make-interval-center-width (c (/ (* c p) 100))))
+
+(define (interval-percent i)
+  (* (/ (width-interval i) (center-interval i)) 100))
