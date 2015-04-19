@@ -124,3 +124,11 @@
                       (cons (iter (car l) '())
                             result)))))
   (iter l '()))
+
+(define (fringe l)
+  (define (iter l result)
+    (cond
+      ((null? l) result)
+      ((pair? l) (iter (cdr l) (iter (car l) result)))
+      (else (cons l result))))
+  (reverse (iter l '())))
