@@ -115,3 +115,12 @@
 (define ex-2-24-3
   (car (cdr (car (cdr (car (cdr (car (cdr (car (cdr (car (cdr
     (list 1 (list 2 (list 3 (list 4 (list 5 (list 6 7)))))))))))))))))))
+
+(define (deep-reverse l)
+  (define (iter l result)
+    (cond ((null? l) result)
+          ((not (pair? l)) l)
+          (else (iter (cdr l)
+                      (cons (iter (car l) '())
+                            result)))))
+  (iter l '()))
