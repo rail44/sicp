@@ -94,3 +94,8 @@
 
 (define (square-list2 items)
   (map square items))
+
+(define (my-for-each proc items)
+  (if (null? items)
+    #t
+    (my-for-each proc (cdr items))))
