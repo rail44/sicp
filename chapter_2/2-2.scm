@@ -67,3 +67,13 @@
 
 (define (no-more? coin-values)
   (null? coin-values))
+
+(define (same-parity f . l)
+  (define (iter l)
+    (if (null? l)
+      '()
+      (let ((car-l (car l)))
+        (if (even? (+ f car-l))
+          (cons car-l (iter (cdr l)))
+          (iter (cdr l))))))
+  (cons f (iter l)))
