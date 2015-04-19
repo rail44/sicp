@@ -77,3 +77,9 @@
           (cons car-l (iter (cdr l)))
           (iter (cdr l))))))
   (cons f (iter l)))
+
+(define (my-map proc items)
+  (if (null? items)
+    '()
+    (cons (proc (car items))
+          (map proc (cdr items)))))
