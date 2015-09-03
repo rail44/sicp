@@ -272,4 +272,11 @@
       (horner-eval 2 (list 1 3 0 5 0 1))
       79)))
 
-
+(define (count-leaves-accum t)
+  (accumulate (lambda (x y) (+ x y))
+              0
+              (map (lambda (x)
+                     (if (pair? x)
+                       (count-leaves-accum x)
+                       1))
+                   t)))
