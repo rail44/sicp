@@ -280,3 +280,6 @@
                        (count-leaves-accum x)
                        1))
                    t)))
+
+(define (test-count-leaves-accum)
+  (count-leaves-accum (list 1 (list 2 3 (list 5)) 6)))
