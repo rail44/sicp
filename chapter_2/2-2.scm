@@ -192,3 +192,17 @@
               (cons #f 0)))))
       (cons #t x)))
   (car (iter m)))
+
+(define (square-tree x)
+  (if (null? x)
+    '()
+  (if (pair? x)
+    (cons (square-tree (car x)) (square-tree (cdr x)))
+    (square x))))
+
+(define (test-square-tree)
+  (assert
+    (equal? (square-tree (list 1
+                               (list 2 (list 3 4) 5)
+                               (list 6 7)))
+            (list 1 (list 4 (list 9 16) 25) (list 36 49)))))
