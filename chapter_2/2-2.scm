@@ -206,3 +206,18 @@
                                (list 2 (list 3 4) 5)
                                (list 6 7)))
             (list 1 (list 4 (list 9 16) 25) (list 36 49)))))
+
+(define (tree-map proc tree)
+  (if (null? tree)
+    '()
+  (if (pair? tree)
+    (cons (square-tree (car tree)) (square-tree (cdr tree)))
+    (proc tree))))
+
+(define (test-tree-map)
+  (define tree
+    (list 1
+          (list 2 (list 3 4) 5)
+          (list 6 7)))
+  (assert (equal? (square-tree tree)
+                  (tree-map square tree))))
