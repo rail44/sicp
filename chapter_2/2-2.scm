@@ -230,3 +230,33 @@
                      (lambda (rest) (cons (car s) rest))
                      rest)))))
 ; 部分適用使いたいっすね
+
+(define (accumulate op initial sequence)
+  (if (null? sequence)
+    initial
+    (op (car sequence)
+        (accumulate op initial (cdr sequence)))))
+
+(define (map-accum p sequence)
+  (accumulate (lambda (x y) (cons (p x) y)) '() sequence))
+
+(define (test-map-accum)
+  (assert (equal?
+            (map-accum square (list 1 2 3 4))
+            (list 1 4 9 16))))
+
+(define (append-accum seq1 seq2)
+  (accumulate cons seq2 seq1))
+
+(define (test-append-accum)
+  (assert (equal?
+            (append-accum (list 1 2) (list 3 4))
+            (list 1 2 3 4))))
+
+(define (length-accum sequence)
+  (accumulate (lambda (x y) (+ 1 y)) 0 sequence))
+
+(define (test-length-accum)
+  (assert (=
+            (length-accum (list 1 2 3 4 5 6))
+            6)))
