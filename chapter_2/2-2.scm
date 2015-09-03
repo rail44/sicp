@@ -221,3 +221,12 @@
           (list 6 7)))
   (assert (equal? (square-tree tree)
                   (tree-map square tree))))
+
+(define (subsets s)
+  (if (null? s)
+    (list '())
+    (let ((rest (subsets (cdr s))))
+      (append rest (map
+                     (lambda (rest) (cons (car s) rest))
+                     rest)))))
+; 部分適用使いたいっすね
