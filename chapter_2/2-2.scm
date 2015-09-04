@@ -1,7 +1,7 @@
-(define (list-ref items n)
+(define (my-list-ref items n)
   (if (= n 0)
     (car items)
-    (list-ref (cdr items) (- n 1))))
+    (my-list-ref (cdr items) (- n 1))))
 
 (define (my-length items)
   (if (null? items)
@@ -335,3 +335,21 @@
     (map (lambda (v)
            (matrix-*-vector cols v))
          m)))
+
+(define (test-matrix-*-matrix)
+  (assert
+    (equal?
+      (matrix-*-matrix m1 m2)
+      (list
+        (list 31 41 51 59)
+        (list 66 87 108 124)
+        (list 91 121 151 174)
+        (list 79 104 129 146))))
+  (assert
+    (equal?
+      (matrix-*-matrix m2 m1)
+      (list
+        (list 63 65 63 51)
+        (list 114 123 126 112)
+        (list 163 175 178 156)
+        (list 63 65 63 51)))))
