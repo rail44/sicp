@@ -353,3 +353,12 @@
         (list 114 123 126 112)
         (list 163 175 178 156)
         (list 63 65 63 51)))))
+
+(define (fold-left op initial sequence)
+  (define (iter result rest)
+    (if (null? rest)
+      result
+      (iter (op result (car rest))
+            (cdr rest))))
+  (iter initial sequence))
+; 結合法則
