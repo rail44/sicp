@@ -1,3 +1,5 @@
+(use srfi-1)
+
 (define (my-list-ref items n)
   (if (= n 0)
     (car items)
@@ -35,12 +37,12 @@
       (append odds odds)
       (my-append odds odds))))
 
-(define (last-pair l)
+(define (my-last-pair l)
   (if (null? l) (error))
   (let ((cdr-l (cdr l)))
     (if (null? cdr-l)
       (car l)
-      (last-pair cdr-l))))
+      (my-last-pair cdr-l))))
 
 (define (my-reverse l)
   (define (iter l result)
@@ -354,7 +356,7 @@
         (list 163 175 178 156)
         (list 63 65 63 51)))))
 
-(define (fold-left op initial sequence)
+(define (my-fold-left op initial sequence)
   (define (iter result rest)
     (if (null? rest)
       result
@@ -362,3 +364,19 @@
             (cdr rest))))
   (iter initial sequence))
 ; 結合法則
+
+(define (reverse-right sequence)
+  (fold-right (lambda (x y) (append y (list x))) '() sequence))
+
+(define (reverse-left sequence)
+  (fold (lambda (x y) (cons x y)) '() sequence))
+
+(define (test-ex-2-39)
+  (assert
+    (equal?
+      (reverse-right (list 1 2 3 4 5))
+      (list 5 4 3 2 1)))
+  (assert
+    (equal?
+      (reverse-left (list 1 2 3 4 5))
+      (list 5 4 3 2 1))))
