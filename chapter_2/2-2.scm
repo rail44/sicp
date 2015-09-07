@@ -1,4 +1,5 @@
 (use srfi-1)
+(load-relative "../chapter_1/1-2.scm")
 
 (define (my-list-ref items n)
   (if (= n 0)
@@ -380,3 +381,39 @@
     (equal?
       (reverse-left (list 1 2 3 4 5))
       (list 5 4 3 2 1))))
+
+(define (flatmap proc seq)
+  (accumulate append '() (map proc seq)))
+
+(define (prime-sum? pair)
+  (prime? (+ (car pair) (cadr pair))))
+
+(define (make-pair-sum pair)
+  (list (car pair) (cadr pair) (+ (car pair) (cadr pair))))
+
+(define (enumerate-interval low high)
+  (if (> low high)
+    '()
+    (cons low (enumerate-interval (+ low 1) high))))
+
+
+(define (make-sum-pairs n)
+  (map make-pair-sum
+       (filter prime-sum?
+               (flatmap
+                 (lambda (i)
+                   (map (lambda (j) (list i j))
+                        (enumerate-interval 1 (- i 1))))
+                 (enumerate-interval 1 n)))))
+
+(define (unique-pairs n)
+  (flatmap
+    (lambda (i)
+      (map (lambda (j) (list i j))
+           (enumerate-interval 1 (- i 1))))
+    (enumerate-interval 1 n)))
+
+(define (ex-2-40 n)
+  (map make-pair-sum
+       (filter prime-sum?
+               (unique-pairs n))))

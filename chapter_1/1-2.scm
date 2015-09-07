@@ -1,4 +1,5 @@
-(load "1-1")
+(load-relative "1-1")
+
 (define (A x y)
   (cond ((= y 0) 0)
         ((= x 0) (* 2 y))
