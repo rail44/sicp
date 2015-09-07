@@ -417,3 +417,27 @@
   (map make-pair-sum
        (filter prime-sum?
                (unique-pairs n))))
+
+(define (unique-trios n)
+  (flatmap
+    (lambda (p)
+      (map (lambda (k) (append p (list k)))
+           (enumerate-interval 1 (- (cadr p) 1))))
+    (unique-pairs n)))
+
+(define (trio-sum trio)
+  (let ((cdr-trio (cdr trio)))
+    (+ (car trio) (car cdr-trio) (cadr cdr-trio))))
+
+(define (prime-trio-sum? trio)
+  (prime? (trio-sum trio)))
+
+(define (make-trio-sum trio)
+  (let ((cdr-trio (cdr trio)))
+    (list (car trio) (car cdr-trio) (cadr cdr-trio) (trio-sum trio))))
+
+(define (ex-2-41 n)
+  (map make-trio-sum
+       (filter prime-trio-sum?
+               (unique-trios n))))
+
