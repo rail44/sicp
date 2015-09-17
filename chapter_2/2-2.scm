@@ -441,3 +441,33 @@
        (filter prime-trio-sum?
                (unique-trios n))))
 
+(define empty-board '())
+
+(define (adjoin-position new-row k rest-of-queens)
+  (cons new-row rest-of-queens))
+
+(define (is-conflict? q1 q2 i)
+  (or (= q1 q2)
+      (= (abs (- q1 q2)) i)))
+
+(define (safe? k positions)
+  (define (iter new rest i)
+    (cond
+      ((null? rest) #t)
+      ((is-conflict? new (car rest) i) #f)
+      (else (iter new (cdr rest) (+ i 1)))))
+  (iter (car positions) (cdr positions) 1))
+
+(define (queens board-size)
+  (define (queen-cols k)
+    (if (= k 0)
+      (list empty-board)
+      (filter
+        (lambda (positions) (safe? k positions))
+        (flatmap
+          (lambda (rest-of-queens)
+            (map (lambda (new-row)
+                   (adjoin-position new-row k rest-of-queens))
+                 (enumerate-interval 1 board-size)))
+          (queen-cols (- k 1))))))
+  (queen-cols board-size))
