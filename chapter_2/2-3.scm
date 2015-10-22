@@ -75,33 +75,12 @@
          (if (same-variable? exp var) 1 0))
         ((sum? exp)
          (make-sum (my-deriv (addend exp) var)
-                   (my-deriv (augend exp) var)))
+                   (my-deriv (my-augend exp) var)))
         ((product? exp)
          (make-sum
            (make-product (multiplier exp)
                          (my-deriv (multiplicand exp) var))
            (make-product (my-deriv (multiplier exp) var)
-                         (multiplicand exp))))
-        (else
-          (error "unknowwn expression type -- DERIV" exp))))
-
-(define (test-my-deriv)
-  (assert-equal
-    '(+ (* x y) (* y (+ x 3)))
-    (my-deriv '(* (* x y) (+ x 3)) 'x)))
-
-(define (ex-2-56 exp var)
-  (cond ((number? exp) 0)
-        ((variable? exp)
-         (if (same-variable? exp var) 1 0))
-        ((sum? exp)
-         (make-sum (ex-2-56 (addend exp) var)
-                   (ex-2-56 (augend exp) var)))
-        ((product? exp)
-         (make-sum
-           (make-product (multiplier exp)
-                         (ex-2-56 (multiplicand exp) var))
-           (make-product (ex-2-56 (multiplier exp) var)
                          (multiplicand exp))))
         ((exponentiation? exp)
          (let ((base-exp (base exp))
@@ -112,9 +91,14 @@
                (make-exponentiation
                  base-exp
                  (make-sum exponent-exp -1)))
-             (ex-2-56 base-exp var))))
+             (my-deriv base-exp var))))
         (else
           (error "unknowwn expression type -- DERIV" exp))))
+
+(define (test-my-deriv)
+  (assert-equal
+    '(+ (* x y) (* y (+ x 3)))
+    (my-deriv '(* (* x y) (+ x 3)) 'x)))
 
 (define (exponentiation? x)
   (and (pair? x) (eq? (car x) '**)))
@@ -133,4 +117,19 @@
 (define (test-ex-2-56)
   (assert-equal
     '(+ (* 3 (** x 2)) (* 2 x))
-    (ex-2-56 '(+ (** x 3) (** x 2)) 'x)))
+    (my-deriv '(+ (** x 3) (** x 2)) 'x)))
+
+(define (test-ex-2-57)
+  (assert-equal
+    '(+ (* x y) (* y (+ x 3)))
+    (my-deriv '(* x y (+ x 3)) 'x)))
+
+(define (my-augend s)
+  (if (null? (cdddr s))
+    (caddr s)
+    (append '(+) (cddr s))))
+
+(define (my-multiplicand p)
+  (if (null? (cdddr p))
+    (caddr p)
+    (append '(*) (cddr p))))
