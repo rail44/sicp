@@ -1,3 +1,5 @@
+(use sicp)
+
 (define (assert-equal a b)
   (assert (equal? a b)))
 
@@ -66,3 +68,24 @@
 
 ; 'hoge は手続き quote の糖衣構文であるため、''hoge は (quote (quote hoge)) と解釈される。
 ; よって (car ''hoge) は quote を返す。
+
+(define (my-deriv exp var)
+  (cond ((number? exp) 0)
+        ((variable? exp)
+         (if (same-variable? exp var) 1 0))
+        ((sum? exp)
+         (make-sum (my-deriv (addend exp) var)
+                   (my-deriv (augend exp) var)))
+        ((product? exp)
+         (make-sum
+           (make-product (multiplier exp)
+                         (my-deriv (multiplicand exp) var))
+           (make-product (my-deriv (multiplier exp) var)
+                         (multiplicand exp))))
+        (else
+          (error "unknowwn expression type -- DERIV" exp))))
+
+(define (test-my-deriv)
+  (assert-equal
+    '(+ (* x y) (* y (+ x 3)))
+    (my-deriv '(* (* x y) (+ x 3)) 'x)))
