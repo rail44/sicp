@@ -222,3 +222,22 @@
   (assert-equal
     (list 1 2 3 4 5 6 7)
     (my-union-set (list 1 2 3 4 5 6 7) (list 1 2 3 4))))
+
+(define (ex-2-60-element-of-set? x set)
+  (pair? (memq x set)))
+
+(define (ex-2-60-adjoin-set x set)
+  (cons x set))
+
+(define (ex-2-60-intersection-set set1 set2)
+  (define (iter result set)
+    (cond 
+      ((null? set) result)
+      ((ex-2-60-element-of-set? (car set) set1)
+       (ex-2-60-intersection-set (cons (car set) result) (cdr set)))
+      (else (ex-2-60-intersection-set result (cdr set)))))
+  (iter '() set2))
+
+(define (ex-2-60-union-set set1 set2)
+  (append set1 set2))
+
