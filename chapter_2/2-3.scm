@@ -63,3 +63,6 @@
 (define (test-ex-2-54)
   (assert-equal #t (ex-2-54 '(this is a list) `(this is a list)))
   (assert-equal #f (ex-2-54 '(this is a list) `(this (is a) list))))
+
+; 'hoge は手続き quote の糖衣構文であるため、''hoge は (quote (quote hoge)) と解釈される。
+; よって (car ''hoge) は quote を返す。
