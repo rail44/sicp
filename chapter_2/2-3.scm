@@ -242,3 +242,41 @@
   (append set1 set2))
 
 ; 要素の追加が頻繁に起こる集合については、ex-2-60の方式の方が計算量が少なくなる。
+
+
+(define (element-of-ordered-set? x set)
+  (cond ((null? set) #f)
+        ((= x(car set)) #t)
+        ((< x (car set)) #f)
+        (else (element-of-ordered-set? x (cdr set)))))
+
+(define (intersection-ordered-set set1 set2)
+  (if (or (null? set1) (null? set2))
+    '()
+    (let ((x1 (car set1)) (x2 (car set2)))
+      (cond ((= x1 x2)
+             (cons x1 (intersection-ordered-set (cdr set1)
+                                                (cdr set2))))
+            ((< x1 x2)
+             (intersection-ordered-set (cdr set1) set2))
+            ((< x2 x1)
+             (intersection-ordered-set set1 (cdr set2)))))))
+
+(define (adjoin-ordered-set x set)
+  (define (iter past rest)
+    (if (null? rest)
+      set
+      (let ((car-rest (car rest)))
+        (cond
+          ((= x car-rest) set)
+          ((< x car-rest) (append (reverse past) (cons x rest)))
+          (else (iter (cons car-rest past) (cdr rest)))))))
+  (iter '() set))
+
+(define (test-adjoin-ordered-set)
+  (assert-equal
+    (list 1 2 3 4 5)
+    (adjoin-ordered-set 3 (list 1 2 4 5)))
+  (assert-equal
+    (list 1 2 3 4 5)
+    (adjoin-ordered-set 3 (list 1 2 3 4 5))))
