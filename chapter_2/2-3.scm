@@ -1,14 +1,16 @@
+(define (assert-equal a b)
+  (assert (equal? a b)))
+
 (define (my-memq item x)
   (cond ((null? x) #f)
         ((eq? item (car x)) x)
         (else (my-memq item (cdr x)))))
 
 (define (test-my-memq)
-  (assert (equal? #f (my-memq 'apple '(pear banana prune))))
-  (assert
-    (equal?
-      '(apple pear)
-      (my-memq 'apple '(x (apple sauce) y apple pear)))))
+  (assert-equal #f (my-memq 'apple '(pear banana prune)))
+  (assert-equal
+    '(apple pear)
+    (my-memq 'apple '(x (apple sauce) y apple pear))))
 
 (define (ex-2-53)
   (display '(list 'a 'b 'c))
@@ -51,3 +53,13 @@
   (newline)
   (display (my-memq 'red '(red shoes blue socks)))
   (newline))
+
+(define (ex-2-54 a b)
+  (if (and (pair? a) (pair? b))
+    (and (ex-2-54 (car a) (car b))
+         (ex-2-54 (cdr a) (cdr b)))
+    (eq? a b)))
+
+(define (test-ex-2-54)
+  (assert-equal #t (ex-2-54 '(this is a list) `(this is a list)))
+  (assert-equal #f (ex-2-54 '(this is a list) `(this (is a) list))))
