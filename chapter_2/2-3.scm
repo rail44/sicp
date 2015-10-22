@@ -241,3 +241,4 @@
 (define (ex-2-60-union-set set1 set2)
   (append set1 set2))
 
+; 要素の追加が頻繁に起こる集合については、ex-2-60の方式の方が計算量が少なくなる。
