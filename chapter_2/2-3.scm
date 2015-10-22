@@ -79,9 +79,9 @@
         ((product? exp)
          (make-sum
            (make-product (multiplier exp)
-                         (my-deriv (multiplicand exp) var))
+                         (my-deriv (my-multiplicand exp) var))
            (make-product (my-deriv (multiplier exp) var)
-                         (multiplicand exp))))
+                         (my-multiplicand exp))))
         ((exponentiation? exp)
          (let ((base-exp (base exp))
                (exponent-exp (exponent exp)))
@@ -133,3 +133,42 @@
   (if (null? (cdddr p))
     (caddr p)
     (append '(*) (cddr p))))
+
+(define (ex-2-58 exp var)
+  (cond ((number? exp) 0)
+        ((variable? exp)
+         (if (same-variable? exp var) 1 0))
+        ((ex-2-58-sum? exp)
+         (make-sum (ex-2-58 (ex-2-58-addend exp) var)
+                   (ex-2-58 (ex-2-58-augend exp) var)))
+        ((ex-2-58-product? exp)
+         (make-sum
+           (make-product (ex-2-58-multiplier exp)
+                         (ex-2-58 (ex-2-58-multiplicand exp) var))
+           (make-product (ex-2-58 (ex-2-58-multiplier exp) var)
+                         (ex-2-58-multiplicand exp))))
+        (else
+          (error "unknowwn expression type -- DERIV" exp))))
+
+(define (ex-2-58-sum? exp)
+  (and (pair? exp) (eq? (cadr exp) '+)))
+
+(define (ex-2-58-addend exp)
+  (car exp))
+
+(define (ex-2-58-augend exp)
+  (caddr exp))
+
+(define (ex-2-58-product? exp)
+  (and (pair? exp) (eq? (cadr exp) '*)))
+
+(define (ex-2-58-multiplier exp)
+  (car exp))
+
+(define (ex-2-58-multiplicand exp)
+  (caddr exp))
+
+(define (test-ex-2-58-a)
+  (assert-equal
+    4
+    (ex-2-58 '(x + (3 * (x + (y + 2)))) 'x)))
