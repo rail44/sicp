@@ -151,24 +151,47 @@
           (error "unknowwn expression type -- DERIV" exp))))
 
 (define (ex-2-58-sum? exp)
-  (and (pair? exp) (eq? (cadr exp) '+)))
+  (and (pair? exp) (pair? (memq '+ exp))))
 
 (define (ex-2-58-addend exp)
-  (car exp))
+  (let ((a (car (split-by exp '+))))
+    (if (null? (cdr a))
+      (car a)
+      a)))
 
 (define (ex-2-58-augend exp)
-  (caddr exp))
+  (let ((a (cadr (split-by exp '+))))
+    (if (null? (cdr a))
+      (car a)
+      a)))
 
 (define (ex-2-58-product? exp)
-  (and (pair? exp) (eq? (cadr exp) '*)))
+  (and (pair? exp) (not (pair? (memq '+ exp))) (pair? (memq '* exp))))
 
 (define (ex-2-58-multiplier exp)
-  (car exp))
+  (let ((m (car (split-by exp '*))))
+    (if (null? (cdr m))
+      (car m)
+      m)))
 
 (define (ex-2-58-multiplicand exp)
-  (caddr exp))
+  (let ((m (cadr (split-by exp '*))))
+    (if (null? (cdr m))
+      (car m)
+      m)))
 
 (define (test-ex-2-58-a)
   (assert-equal
     4
     (ex-2-58 '(x + (3 * (x + (y + 2)))) 'x)))
+
+(define (split-by l x)
+  (if (eq? (car l) x)
+    (list '() (cdr l))
+    (let ((next (split-by (cdr l) x)))
+      (list (append (list (car l)) (car next)) (cadr next)))))
+
+(define (test-ex-2-58-b)
+  (assert-equal
+    4
+    (ex-2-58 '(x + 3 * (x + y + 2)) 'x)))
