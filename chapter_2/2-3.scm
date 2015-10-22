@@ -195,3 +195,30 @@
   (assert-equal
     4
     (ex-2-58 '(x + 3 * (x + y + 2)) 'x)))
+
+(define (my-element-of-set? x set)
+  (cond ((null? set) #f)
+        ((equal? x (car set)) #t)
+        (else (my-element-of-set? x (cdr set)))))
+
+(define (my-adjoin-set x set)
+  (if (my-element-of-set? x set)
+    set
+    (cons x set)))
+
+(define (my-intersection-set set1 set2)
+  (cond ((or (null? set1) (null? set2)) '())
+        ((my-element-of-set? (car set1) set2)
+         (cons (car set1)
+               (my-intersection-set (cdr set1) set2)))
+        (else (my-intersection-set (cdr set1) set2))))
+
+(define (my-union-set set1 set2)
+  (if (null? set2)
+    set1
+    (my-union-set (my-adjoin-set (car set2) set1) (cdr set2))))
+
+(define (test-my-union-set)
+  (assert-equal
+    (list 1 2 3 4 5 6 7)
+    (my-union-set (list 1 2 3 4 5 6 7) (list 1 2 3 4))))
