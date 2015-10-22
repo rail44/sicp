@@ -89,3 +89,48 @@
   (assert-equal
     '(+ (* x y) (* y (+ x 3)))
     (my-deriv '(* (* x y) (+ x 3)) 'x)))
+
+(define (ex-2-56 exp var)
+  (cond ((number? exp) 0)
+        ((variable? exp)
+         (if (same-variable? exp var) 1 0))
+        ((sum? exp)
+         (make-sum (ex-2-56 (addend exp) var)
+                   (ex-2-56 (augend exp) var)))
+        ((product? exp)
+         (make-sum
+           (make-product (multiplier exp)
+                         (ex-2-56 (multiplicand exp) var))
+           (make-product (ex-2-56 (multiplier exp) var)
+                         (multiplicand exp))))
+        ((exponentiation? exp)
+         (let ((base-exp (base exp))
+               (exponent-exp (exponent exp)))
+           (make-product
+             (make-product
+               exponent-exp
+               (make-exponentiation
+                 base-exp
+                 (make-sum exponent-exp -1)))
+             (ex-2-56 base-exp var))))
+        (else
+          (error "unknowwn expression type -- DERIV" exp))))
+
+(define (exponentiation? x)
+  (and (pair? x) (eq? (car x) '**)))
+
+(define (base e) (cadr e))
+
+(define (exponent e) (caddr e))
+
+(define (make-exponentiation b e)
+  (cond
+    ((=number? e 0) 1)
+    ((=number? e 1) b)
+    ((and (number? b) (number? e)) (expt b e))
+    (else (list '** b e))))
+
+(define (test-ex-2-56)
+  (assert-equal
+    '(+ (* 3 (** x 2)) (* 2 x))
+    (ex-2-56 '(+ (** x 3) (** x 2)) 'x)))
