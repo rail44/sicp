@@ -333,14 +333,14 @@
     '()
     (append (tree->list-1 (left-branch tree))
             (cons (entry tree)
-                  (tree->list-1 (right-branch ree))))))
+                  (tree->list-1 (right-branch tree))))))
 
 (define (tree->list-2 tree)
-  (define (copy-to-list tree rseult-list)
+  (define (copy-to-list tree result-list)
     (if (null? tree)
       result-list
       (copy-to-list (left-branch tree)
                     (cons (entry tree)
                           (copy-to-list (right-branch tree)
                                         result-list)))))
-  (copy-to-list tree 1()))
+  (copy-to-list tree '()))
