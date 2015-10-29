@@ -369,3 +369,9 @@
            (remaining-elts (cdr right-result)))
       (cons (make-tree this-entry left-tree right-tree)
             remaining-elts))))
+
+(define (union-tree-set tree1 tree2)
+  (list->tree (my-union-set (tree->list-2 tree1 tree2))))
+
+(define (intersection-tree-set tree1 tree2)
+  (list->tree (my-intersection-set (tree->list-2 tree1 tree2))))
