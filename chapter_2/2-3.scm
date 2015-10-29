@@ -375,3 +375,23 @@
 
 (define (intersection-tree-set tree1 tree2)
   (list->tree (my-intersection-set (tree->list-2 tree1 tree2))))
+
+(define (lookup-from-tree-set given-key set-of-records)
+  (cond ((null? set-of-records) #f)
+        ((= given-key (key (entry set-of-records))) (entry set-of-records))
+        ((< given-key (key (entry set-of-records)))
+         (lookup-from-tree-set given-key (left-branch set-of-records)))
+        ((> given-key (key (entry set-of-records)))
+         (lookup-from-tree-set given-key (right-branch set-of-records)))))
+
+(define (key record)
+  record)
+; 簡単のためにレコードそのものをキーにする
+
+(define (test-lookup-from-tree-set)
+  (assert-equal
+    3
+    (lookup-from-tree-set 3 (list->tree (list 1 2 3 4 5 6))))
+  (assert-equal
+    #f
+    (lookup-from-tree-set 7 (list->tree (list 1 2 3 4 5 6)))))
