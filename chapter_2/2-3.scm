@@ -351,4 +351,22 @@
 ; ex-2-63-b
 ; tree->list-2はO(n)で増加するが、tree->list-1はapendを使っているためO(nlogn)で増加する
 ; ↑の認識であってるかどうか検索したら、反復的プロセスか再帰的プロセスかに言及しているものがあったが、どちらもステップ数の増加という観点でいうと同じであるように思える(たぶん)
-; tree->list-1, tree->list-2とも要素を昇順に並べた同一のリストを作る。
+
+(define (list->tree elements)
+  (car (partial-tree elements (length elements))))
+
+(define (partial-tree elts n)
+  (if (= n 0)
+    (cons '() elts)
+    (let ((left-size (quotient (- n 1) 2)))
+      (let ((left-result (partial-tree elts left-size)))
+        (let ((left-tree (car left-result))
+              (non-left-elts (cdr left-result))
+              (right-size (- n (+ left-size 1))))
+          (let ((this-entry (car non-left-elts))
+                (right-result (partial-tree (cdr non-left-elts)
+                                            right-size)))
+            (let ((right-tree (car right-result))
+                  (remaining-elts (cdr right-result)))
+              (cons (make-tree this-entry left-tree right-tree)
+                    remaining-elts))))))))
