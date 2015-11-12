@@ -422,7 +422,7 @@
 
 (define sample-message '(0 1 1 0 0 1 0 1 0 1 1 1 0))
 
-; #;1> (my-decode sample-message  sample-tree)
+; > (my-decode sample-message  sample-tree)
 ; (A D A B B C A)
 
 (define sample-decoded-message '(A D A B B C A))
@@ -461,3 +461,29 @@
     (car leafs)
     (successive-merge (adjoin-huffman-set (make-code-tree (car leafs) (cadr leafs))
                                           (cddr leafs)))))
+
+(define ex-2-70-tree
+  (generate-huffman-tree
+    '((A 2)
+      (NA 16)
+      (BOOM 1)
+      (SHA 3)
+      (GET 2)
+      (YIP 9)
+      (JOB 2)
+      (WAH 1))))
+
+(define ex-2-70-message
+  '(GET A JOB
+    SHA NA NA NA NA NA NA NA NA
+    GET A JOB
+    SHA NA NA NA NA NA NA NA NA
+    WAH YIP YIP YIP YIP YIP YIP YIP YIP YIP
+    SHA BOOM))
+
+; > (my-encode ex-2-70-message ex-2-70-tree)
+; (1 1 1 1 1 1 1 0 0 1 1 1 1 0 1 1 1 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 1 1 1 1 0 1 1 1 0 0 0 0 0 0 0 0 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 1 0 1 1 0 1 1)
+; > (length (my-encode ex-2-70-message ex-2-70-tree))
+; 84
+; > (* 8 (length ex-2-70-message))
+; 288
