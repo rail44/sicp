@@ -447,8 +447,8 @@
     sample-message
     (my-encode sample-decoded-message sample-tree)))
 
-(define (generate-huffman-tree pairs)
-  (successive-merge (make-leaf-set pairs)))
+(define (my-generate-huffman-tree pairs)
+  (my-successive-merge (make-leaf-set pairs)))
 
 (define (adjoin-huffman-set x set)
   (cond ((null? set) (list x))
@@ -456,14 +456,14 @@
         (else (cons (car set)
                     (adjoin-huffman-set x (cdr set))))))
 
-(define (successive-merge leafs)
+(define (my-successive-merge leafs)
   (if (null? (cdr leafs))
     (car leafs)
-    (successive-merge (adjoin-huffman-set (make-code-tree (car leafs) (cadr leafs))
-                                          (cddr leafs)))))
+    (my-successive-merge (adjoin-huffman-set (make-code-tree (cadr leafs) (car leafs))
+                                             (cddr leafs)))))
 
 (define ex-2-70-tree
-  (generate-huffman-tree
+  (my-generate-huffman-tree
     '((A 2)
       (NA 16)
       (BOOM 1)
@@ -482,7 +482,7 @@
     SHA BOOM))
 
 ; > (my-encode ex-2-70-message ex-2-70-tree)
-; (1 1 1 1 1 1 1 0 0 1 1 1 1 0 1 1 1 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 1 1 1 1 0 1 1 1 0 0 0 0 0 0 0 0 0 1 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 1 0 1 1 0 1 1)
+; (0 0 0 0 0 0 0 1 1 0 0 0 0 1 0 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 1 1 0 0 0 0 1 0 0 0 1 1 1 1 1
 ; > (length (my-encode ex-2-70-message ex-2-70-tree))
 ; 84
 ; > (* 8 (length ex-2-70-message))
@@ -490,8 +490,10 @@
 
 ; ex-2-71
 ; 普通に最高頻度は常に1ビット, 最低頻度はn-1だと思った
-; > (my-encode '(1) (generate-huffman-tree '((1 1) (2 2) (3 4) (4 8) (5 16))))
-; (0 0 0 0)
-; > (my-encode '(1) (generate-huffman-tree '((1 1) (2 2) (3 4) (4 8) (5 16) (6 32) (7 64) (8 128) (9 256) (10 512))))
-; (0 0 0 0 0 0 0 0 0)
+; > (my-encode '(1) (my-generate-huffman-tree '((1 1) (2 2) (3 4) (4 8) (5 16))))
+; (1 1 1 1)
+; > (my-encode '(1) (my-generate-huffman-tree '((1 1) (2 2) (3 4) (4 8) (5 16) (6 32) (7 64) (8 128) (9 256) (10 512))))
+; (1 1 1 1 1 1 1 1 1)
 ; あってた
+
+; ここで、chickenのSICP拡張のgenerate-huffman-treeがleftとrightを逆に作ることを発見
