@@ -446,3 +446,18 @@
   (assert-equal
     sample-message
     (my-encode sample-decoded-message sample-tree)))
+
+(define (generate-huffman-tree pairs)
+  (successive-merge (make-leaf-set pairs)))
+
+(define (adjoin-huffman-set x set)
+  (cond ((null? set) (list x))
+        ((< (weight x) (weight (car set))) (cons x set))
+        (else (cons (car set)
+                    (adjoin-huffman-set x (cdr set))))))
+
+(define (successive-merge leafs)
+  (if (null? (cdr leafs))
+    (car leafs)
+    (successive-merge (adjoin-huffman-set (make-code-tree (car leafs) (cadr leafs))
+                                          (cddr leafs)))))
