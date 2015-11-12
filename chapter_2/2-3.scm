@@ -424,3 +424,25 @@
 
 ; #;1> (my-decode sample-message  sample-tree)
 ; (A D A B B C A)
+
+(define sample-decoded-message '(A D A B B C A))
+
+(define (my-encode message tree)
+  (if (null? message)
+    '()
+    (append (my-encode-symbol (car message) tree)
+            (my-encode (cdr message) tree))))
+
+(define (my-encode-symbol char tree)
+  (if (leaf? tree)
+    '()
+    (let ((right (right-branch tree))
+          (left (left-branch tree)))
+      (cond ((pair? (memq char (symbols left))) (cons 0 (my-encode-symbol char left)))
+            ((pair? (memq char (symbols right))) (cons 1 (my-encode-symbol char right)))
+            (else (error "bad charactor" char))))))
+
+(define (test-my-encode)
+  (assert-equal
+    sample-message
+    (my-encode sample-decoded-message sample-tree)))
